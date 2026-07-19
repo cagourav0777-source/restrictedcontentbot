@@ -36,7 +36,7 @@ async def start_handler(client: Client, message: Message):
 
 @bot.on_message(filters.private & filters.command("stats") & filters.user(Telegram.AUTH_USER_ID))
 async def stats_handler(client: Client, message: Message):
-    """Handle the /stats command - shows bot statistics (admin only)."""
+    """Handle the /stats command - shows detailed bot statistics (admin only)."""
     user_count = len(await db.fetch_all("users"))
     total_user_count = len(await db.fetch_all("total_users"))
     bot_list = await db.fetch_all("bots")
@@ -46,6 +46,20 @@ async def stats_handler(client: Client, message: Message):
     logging.info(f"Admin requested stats: {user_count} users, {bot_count} bots.")
 
     await message.reply(f"👥 **User Count:** {user_count}\n👥 **Total User Count:** {total_user_count}\n🤖 **Bot Count:** {bot_count}\n\n**Registered Bots:**\n{bot_users}")
+
+
+@bot.on_message(filters.private & filters.command("stats"))
+async def public_stats_handler(client: Client, message: Message):
+    """Handle the /stats command - shows basic statistics for all users."""
+    user_count = len(await db.fetch_all("users"))
+    bot_count = len(await db.fetch_all("bots"))
+    
+    await message.reply(
+        f"📊 **Bot Statistics**\n\n"
+        f"👥 **Total Users:** {user_count}\n"
+        f"🤖 **Bots Created:** {bot_count}\n\n"
+        f"Use this bot to create your own content saver bot!"
+    )
 
 
 @bot.on_message(filters.private)
