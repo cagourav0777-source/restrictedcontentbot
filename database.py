@@ -12,16 +12,19 @@ class DatabaseClient:
         self.use_redis = False
         self.memory_db = {}  # In-memory fallback storage
         
-        # Try to connect to Redis
-        try:
-            self.redis = Redis(host=host, port=port, password=password, ssl=True, decode_responses=True)
-            # Test connection
-            asyncio.get_event_loop().run_until_complete(self.redis.ping())
-            self.use_redis = True
-            print("✓ Connected to Redis database")
-        except Exception as e:
-            print(f"✗ Redis connection failed: {e}")
-            print("✓ Using in-memory database as fallback")
+        # Only try Redis if host is provided and not localhost
+        if host and host != 'localhost':
+            try:
+                self.redis = Redis(host=host, port=port, password=password, ssl=True, decode_responses=True)
+                # Test connection
+                asyncio.get_event_loop().run_until_complete(self.redis.ping())
+                self.use_redis = True
+                print("✓ Connected to Redis database")
+            except Exception as e:
+                print(f"✗ Redis connection failed: {e}")
+                print("✓ Using in-memory database as fallback")
+        else:
+            print("✓ Using in-memory database (Redis not configured)")
 
     def ensure_str(self, value: Union[str, int]) -> str:
         """Convert value to string for consistent storage."""
