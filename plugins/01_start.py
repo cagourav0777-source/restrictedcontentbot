@@ -30,6 +30,6 @@ async def source_handler(client: Client, message: Message):
     await message.reply(
         "Source code available on GitHub.",
         reply_markup=InlineKeyboardMarkup(
-            [[InlineKeyboardButton("View Source", url="https://github.com/Harshit-shrivastav/Save-Contents-Cloner-Bot")]]
+            [[InlineKeyboardButton("View Source", url="https://github.com/cagourav0777-source/restrictedcontentbot")]]
         ),
   )
